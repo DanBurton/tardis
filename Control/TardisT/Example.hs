@@ -8,7 +8,7 @@ foo = do
   sendFuture 3
   y <- getPast
   sendPast 7
-  return (x + y)
+  return (x - y)
 
 runFoo :: Int
 runFoo = evalTardis foo noState

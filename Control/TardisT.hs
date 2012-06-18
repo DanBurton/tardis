@@ -1,4 +1,10 @@
-{-# LANGUAGE DoRec #-}
+{-# LANGUAGE
+      DoRec
+    , FlexibleInstances
+    , MultiParamTypeClasses
+    , FunctionalDependencies
+    , UndecidableInstances
+    #-}
 
 module Control.TardisT (
     TardisT
@@ -28,8 +34,9 @@ import Control.Monad
 import Control.Applicative
 import Control.Monad.Identity
 import Control.Monad.Fix
-import Control.Monad.Trans
 
+import Control.Monad.Trans.Class
+import Control.Monad.State.Class
 
 evalTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m a
 evalTardisT t s = do
@@ -76,21 +83,27 @@ instance MonadFix m => MonadFix (TardisT bw fw m) where
     rec (x, (bw', fw')) <- runTardisT (f x) (bw, fw)
     return (x, (bw', fw'))
 
-getPast    :: Monad m =>       TardisT bw fw m fw
-getPast        = tardis $ \ ~(bw, fw)  -> (fw, (bw, fw))
 
-getFuture  :: Monad m =>       TardisT bw fw m bw
-getFuture      = tardis $ \ ~(bw, fw)  -> (bw, (bw, fw))
+class Monad m => MonadTardis bw fw m | m -> bw, m -> fw where
+  getPast    :: m fw
+  getFuture  :: m bw
+  sendPast   :: bw -> m ()
+  sendFuture :: fw -> m ()
 
-sendPast   :: Monad m => bw -> TardisT bw fw m ()
-sendPast   bw' = tardis $ \ ~(_bw, fw) -> ((), (bw', fw))
+instance MonadFix m => MonadTardis bw fw (TardisT bw fw m) where
+  getPast        = tardis $ \ ~(bw, fw)  -> (fw, (bw, fw))
+  getFuture      = tardis $ \ ~(bw, fw)  -> (bw, (bw, fw))
+  sendPast   bw' = tardis $ \ ~(_bw, fw) -> ((), (bw', fw))
+  sendFuture fw' = tardis $ \ ~(bw, _fw) -> ((), (bw, fw'))
 
-sendFuture :: Monad m => fw -> TardisT bw fw m ()
-sendFuture fw' = tardis $ \ ~(bw, _fw) -> ((), (bw, fw'))
 
-
-modifyForwards :: MonadFix m => (fw -> fw) -> TardisT bw fw m ()
+modifyForwards :: MonadTardis bw fw m => (fw -> fw) -> m ()
 modifyForwards f = getPast >>= sendFuture . f
 
-modifyBackwards :: MonadFix m => (bw -> bw) -> TardisT bw fw m ()
+modifyBackwards :: MonadTardis bw fw m => (bw -> bw) -> m ()
 modifyBackwards f = getFuture >>= sendPast . f
+
+
+instance MonadTardis bw fw m => MonadState fw m where
+  get = getPast
+  put = sendFuture
