@@ -16,6 +16,9 @@ module Control.TardisT (
   , sendPast
   , sendFuture
   
+  , modifyForwards
+  , modifyBackwards
+  
   , noState
   ) where
 
@@ -25,6 +28,7 @@ import Control.Monad
 import Control.Applicative
 import Control.Monad.Identity
 import Control.Monad.Fix
+import Control.Monad.Trans
 
 
 evalTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m a
@@ -55,13 +59,22 @@ instance MonadFix m => Monad (TardisT bw fw m) where
         (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
     return (x', (bw'', fw''))
 
-instance MonadFix m => Functor (TardisT fw bw m) where
+instance MonadFix m => Functor (TardisT bw fw m) where
   fmap = liftM
 
-instance MonadFix m => Applicative (TardisT fw bw m) where
+instance MonadFix m => Applicative (TardisT bw fw m) where
   pure = return
   (<*>) = ap
 
+instance MonadTrans (TardisT bw fw) where
+  lift m = tardisT $ \ ~(bw, fw) -> do
+    x <- m
+    return (x, (bw, fw))
+
+instance MonadFix m => MonadFix (TardisT bw fw m) where
+  mfix f = tardisT $ \ ~(bw, fw) -> do
+    rec (x, (bw', fw')) <- runTardisT (f x) (bw, fw)
+    return (x, (bw', fw'))
 
 getPast    :: Monad m =>       TardisT bw fw m fw
 getPast        = tardis $ \ ~(bw, fw)  -> (fw, (bw, fw))
@@ -74,3 +87,10 @@ sendPast   bw' = tardis $ \ ~(_bw, fw) -> ((), (bw', fw))
 
 sendFuture :: Monad m => fw -> TardisT bw fw m ()
 sendFuture fw' = tardis $ \ ~(bw, _fw) -> ((), (bw, fw'))
+
+
+modifyForwards :: MonadFix m => (fw -> fw) -> TardisT bw fw m ()
+modifyForwards f = getPast >>= sendFuture . f
+
+modifyBackwards :: MonadFix m => (bw -> bw) -> TardisT bw fw m ()
+modifyBackwards f = getFuture >>= sendPast . f
