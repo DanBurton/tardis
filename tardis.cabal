@@ -1,0 +1,21 @@
+name:                tardis
+version:             0.1.0.0
+synopsis:            A state monad transformer
+                       with state that travels forwards
+                       and backwards in time.
+homepage:            http://github.com/DanBurton/tardis
+license:             BSD3
+license-file:        LICENSE
+author:              Dan Burton
+maintainer:          danburton.email@gmail.com
+category:            Control
+build-type:          Simple
+cabal-version:       >=1.8
+
+library
+  exposed-modules:       Control.TardisT
+                       , Control.TardisT.Internal
+                       , Control.TardisT.Example
+
+  build-depends:         base==4.*
+                       , mtl==2.*
