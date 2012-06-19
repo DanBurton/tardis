@@ -1,4 +1,4 @@
-module Control.TardisT.Internal (
+module Control.Tardis.Internal (
     TardisT
   , runTardisT
   , Tardis

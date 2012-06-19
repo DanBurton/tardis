@@ -1,6 +1,7 @@
 module Control.Seer.Example where
 
 import Control.Seer
+import Control.Monad.Trans (lift)
 
 import qualified Data.Map as M
 import Data.Map (Map, (!))
@@ -30,3 +31,16 @@ bar = do
   return [m ! 1, m ! 2]
 
 runBar = runSeer bar
+
+
+baz :: Seer [String] [String]
+baz = do
+  x <- see
+  send ["olleH"]
+  send ["Dan"]
+  send ["Bye"]
+  send [reverse (x !! 0) ++ " " ++ (x !! 4)]
+  send ["car"]
+  see
+
+runBaz = runSeer baz

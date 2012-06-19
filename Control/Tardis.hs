@@ -5,7 +5,7 @@
     , FunctionalDependencies
     #-}
 
-module Control.TardisT (
+module Control.Tardis (
     TardisT
   , runTardisT
   , evalTardisT

@@ -1,6 +1,6 @@
-module Control.TardisT.Example where
+module Control.Tardis.Example where
 
-import Control.TardisT
+import Control.Tardis
 
 foo :: Tardis Int Int Int
 foo = do
