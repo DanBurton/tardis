@@ -3,7 +3,6 @@
     , FlexibleInstances
     , MultiParamTypeClasses
     , FunctionalDependencies
-    , UndecidableInstances
     #-}
 
 module Control.TardisT (
@@ -30,13 +29,12 @@ module Control.TardisT (
 
 import Control.TardisT.Internal
 
-import Control.Monad
 import Control.Applicative
+import Control.Monad
 import Control.Monad.Identity
 import Control.Monad.Fix
-
-import Control.Monad.Trans.Class
-import Control.Monad.State.Class
+import Control.Monad.Trans
+import Control.Monad.State
 
 evalTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m a
 evalTardisT t s = fst `liftM` runTardisT t s
@@ -99,7 +97,6 @@ modifyForwards f = getPast >>= sendFuture . f
 modifyBackwards :: MonadTardis bw fw m => (bw -> bw) -> m ()
 modifyBackwards f = getFuture >>= sendPast . f
 
-
-instance MonadTardis bw fw m => MonadState fw m where
+instance MonadFix m => MonadState fw (TardisT bw fw m) where
   get = getPast
   put = sendFuture
