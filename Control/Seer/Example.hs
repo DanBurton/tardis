@@ -5,14 +5,20 @@ import Control.Seer
 import qualified Data.Map as M
 import Data.Map (Map, (!))
 
+
+
 foo :: Seer [Int] [Int]
 foo = do
   x <- see
-  send [3, x !! 3]
-  send (replicate (x !! 0) 2)
-  send [4, 8]
-  send [5]
+  send [1, 2, x !! 6]
+  send (replicate (x !! 2) 4)
+  send [3]
   see
+  
+-- two valid solutions:
+-- x !! 6 = 3
+-- x !! 6 = 4
+
 
 runFoo = runSeer foo
 
