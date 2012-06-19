@@ -22,7 +22,7 @@ newtype Seer s a = Seer (Tardis s s a)
   deriving (Functor, Applicative, Monad, MonadFix)
 
 runSeerWith :: s -> s -> Seer s a -> a
-runSeerWith fw bw (Seer t) = fst $ runTardis t (fw, bw)
+runSeerWith bw fw (Seer t) = fst $ runTardis t (bw, fw)
 
 runSeer :: Monoid s => Seer s a -> a
 runSeer = runSeerWith mempty mempty
