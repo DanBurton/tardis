@@ -27,7 +27,7 @@ module Control.Tardis (
   , noState
   ) where
 
-import Control.TardisT.Internal
+import Control.Tardis.Internal
 
 import Control.Applicative
 import Control.Monad

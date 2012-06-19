@@ -21,7 +21,7 @@ module Control.Seer (
   ) where
 
 
-import Control.TardisT
+import Control.Tardis
 
 import Control.Applicative
 import Control.Monad
