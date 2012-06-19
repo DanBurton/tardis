@@ -39,14 +39,10 @@ import Control.Monad.Trans.Class
 import Control.Monad.State.Class
 
 evalTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m a
-evalTardisT t s = do
-  (a, _) <- runTardisT t s
-  return a
+evalTardisT t s = fst `liftM` runTardisT t s
 
 execTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m (bw, fw)
-execTardisT t s = do
-  (_, s') <- runTardisT t s
-  return s'
+execTardisT t s = snd `liftM` runTardisT t s
 
 evalTardis :: Tardis bw fw a -> (bw, fw) -> a
 evalTardis t = runIdentity . evalTardisT t
@@ -74,14 +70,14 @@ instance MonadFix m => Applicative (TardisT bw fw m) where
   (<*>) = ap
 
 instance MonadTrans (TardisT bw fw) where
-  lift m = tardisT $ \ ~(bw, fw) -> do
+  lift m = tardisT $ \s -> do
     x <- m
-    return (x, (bw, fw))
+    return (x, s)
 
 instance MonadFix m => MonadFix (TardisT bw fw m) where
-  mfix f = tardisT $ \ ~(bw, fw) -> do
-    rec (x, (bw', fw')) <- runTardisT (f x) (bw, fw)
-    return (x, (bw', fw'))
+  mfix f = tardisT $ \s -> do
+    rec (x, s') <- runTardisT (f x) s
+    return (x, s')
 
 
 class Monad m => MonadTardis bw fw m | m -> bw, m -> fw where
