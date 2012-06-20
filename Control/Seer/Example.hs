@@ -1,6 +1,6 @@
 module Control.Seer.Example where
 
-import Control.Seer
+import Control.SeerRW
 import Control.Monad.Trans (lift)
 
 import qualified Data.Map as M
