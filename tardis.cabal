@@ -18,7 +18,6 @@ Flag use-undecidable-instances
 library
   exposed-modules:     Control.Monad.Tardis
                      , Control.Monad.Tardis.Class
-                     , Control.Monad.Tardis.Example
                      , Control.Monad.Trans.Tardis
 
 
