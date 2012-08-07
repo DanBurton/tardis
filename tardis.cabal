@@ -1,8 +1,6 @@
 name:                tardis
-version:             0.1.0.0
-synopsis:            A state monad transformer
-                       with state that travels forwards
-                       and backwards in time.
+version:             0.2.0.0
+synopsis:            Bidirectional state monad transformer
 homepage:            http://github.com/DanBurton/tardis
 license:             BSD3
 license-file:        LICENSE
@@ -12,10 +10,20 @@ category:            Control
 build-type:          Simple
 cabal-version:       >=1.8
 
-library
-  exposed-modules:       Control.TardisT
-                       , Control.TardisT.Internal
-                       , Control.TardisT.Example
+Flag use-undecidable-instances
+  description:    Include additional instances for MonadTardis
+                  that require some sketchy language extensions
+  default:        False
 
-  build-depends:         base==4.*
-                       , mtl==2.*
+library
+  exposed-modules:     Control.Monad.Tardis
+                     , Control.Monad.Tardis.Class
+                     , Control.Monad.Tardis.Example
+                     , Control.Monad.Trans.Tardis
+
+
+  build-depends:       base==4.*
+                     , mtl==2.*
+
+  if flag(use-undecidable-instances)
+    cpp-options: -DUSE_UNDECIDABLE_INSTANCES
