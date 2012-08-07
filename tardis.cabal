@@ -1,7 +1,8 @@
 name:                tardis
 version:             0.2.0.0
 synopsis:            Bidirectional state monad transformer
-homepage:            http://github.com/DanBurton/tardis
+homepage:            https://github.com/DanBurton/tardis
+bug-reports:         https://github.com/DanBurton/tardis/issues
 license:             BSD3
 license-file:        LICENSE
 author:              Dan Burton
@@ -26,3 +27,13 @@ library
 
   if flag(use-undecidable-instances)
     cpp-options: -DUSE_UNDECIDABLE_INSTANCES
+
+
+source-repository head
+  type:     git
+  location: git://github.com/DanBurton/tardis.git
+
+source-repository this
+  type:     git
+  location: git://github.com/DanBurton/tardis.git
+  tag:      tardis-0.2.0.0
