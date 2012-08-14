@@ -171,7 +171,7 @@ instance ( MonadTrans t
     This code is equivalent to the previous example:
 
 > flip execTardis (10, "Dan") $ do
->   modifyForwards (++ "Burton")
+>   modifyForwards (++ " Burton")
 >   modifyBackwards (+ 1)
 
 -}
