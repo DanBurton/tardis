@@ -60,6 +60,4 @@ http://panicsonic.blogspot.com/2007/12/backwards-state-or-power-of-laziness.html
 
 ----
 
-Currently, this is hugely lacking in test coverage and documentation.
-I'll put some more effort into documentation soon,
-but I'm not really sure how to test this other than by example.
+(c) 2012 Dan Burton
