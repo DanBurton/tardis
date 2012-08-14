@@ -1,5 +1,5 @@
 name:                tardis
-version:             0.2.0.0
+version:             0.3.0.0
 synopsis:            Bidirectional state monad transformer
 homepage:            https://github.com/DanBurton/tardis
 bug-reports:         https://github.com/DanBurton/tardis/issues
@@ -10,6 +10,20 @@ maintainer:          danburton.email@gmail.com
 category:            Control
 build-type:          Simple
 cabal-version:       >=1.8
+
+description:
+  A Tardis is a combination of both a forwards and a backwards
+  state transformer, providing two state values that \"travel\"
+  in opposite directions.
+  .
+  You can install this library with the @use-undecidable-instances@ flag,
+  but this feature is only provided for toying around.
+  If you depend on this library, or install any libraries that
+  depend on this library, then you should install this library /without/
+  that flag.
+  .
+  A detailed description of what a Tardis is and how to use it
+  can be found in the documentation for Control.Monad.Tardis.
 
 Flag use-undecidable-instances
   description:    Include additional instances for MonadTardis
@@ -36,4 +50,5 @@ source-repository head
 source-repository this
   type:     git
   location: git://github.com/DanBurton/tardis.git
-  tag:      tardis-0.2.0.0
+  tag:      tardis-0.3.0.0
+
