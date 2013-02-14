@@ -1,5 +1,5 @@
 name:                tardis
-version:             0.3.0.0
+version:             0.4.0.0
 synopsis:            Bidirectional state monad transformer
 homepage:            https://github.com/DanBurton/tardis
 bug-reports:         https://github.com/DanBurton/tardis/issues
@@ -16,31 +16,17 @@ description:
   state transformer, providing two state values that \"travel\"
   in opposite directions.
   .
-  You can install this library with the @use-undecidable-instances@ flag,
-  but this feature is only provided for toying around.
-  If you depend on this library, or install any libraries that
-  depend on this library, then you should install this library /without/
-  that flag.
-  .
   A detailed description of what a Tardis is and how to use it
   can be found in the documentation for Control.Monad.Tardis.
 
-Flag use-undecidable-instances
-  description:    Include additional instances for MonadTardis
-                  that require some sketchy language extensions
-  default:        False
 
 library
   exposed-modules:     Control.Monad.Tardis
                      , Control.Monad.Tardis.Class
                      , Control.Monad.Trans.Tardis
 
-
   build-depends:       base==4.*
                      , mtl==2.*
-
-  if flag(use-undecidable-instances)
-    cpp-options: -DUSE_UNDECIDABLE_INSTANCES
 
 
 source-repository head
@@ -50,5 +36,4 @@ source-repository head
 source-repository this
   type:     git
   location: git://github.com/DanBurton/tardis.git
-  tag:      tardis-0.3.0.0
-
+  tag:      tardis-0.4.0.0

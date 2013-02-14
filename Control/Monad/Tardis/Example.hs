@@ -1,4 +1,6 @@
-{-# LANGUAGE DoRec #-}
+{-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations #-}
+{-# LANGUAGE DoRec                           #-}
+
 
 module Control.Monad.Tardis.Example where
 
@@ -16,6 +18,7 @@ data LFrame = LStrike { bonus1, bonus2 :: !Int }
             | LSpare { throw1, bonus1 :: !Int }
             | LFrame { throw1, throw2 :: !Int }
 
+sampleGame :: BowlingGame
 sampleGame = BowlingGame
   { frames =
     [ Strike    , Spare 9
@@ -50,13 +53,13 @@ toScores game = flip evalTardis initState $ go (frames game) where
 
   finalFrameScore = case lastFrame game of
     LStrike n m -> 10 + n + m
-    LSpare n m  -> 10 + m
-    LFrame n m -> n + m
+    LSpare _n m -> 10 + m
+    LFrame  n m -> n  + m
 
   initState = (NextThrows $ case lastFrame game of
-    LStrike n m -> (10, n)
-    LSpare n _m -> (n, 10 - n)
-    LFrame n m -> (n, m)
+    LStrike n _m -> (10, n)
+    LSpare  n _m -> (n,  10 - n)
+    LFrame  n  m -> (n,  m)
     , PreviousScores [0])
 
 

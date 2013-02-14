@@ -1,5 +1,6 @@
-{-# OPTIONS_GHC -Wall #-}
-{-# LANGUAGE DoRec #-}
+{-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations #-}
+{-# LANGUAGE DoRec                           #-}
+
 
 -- | The data definition of a "TardisT"
 -- as well as its primitive operations,

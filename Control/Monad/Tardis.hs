@@ -1,24 +1,7 @@
-{-# LANGUAGE CPP                        #-}
-{-# OPTIONS_GHC -Wall -fno-warn-orphans #-}
-
-{-# LANGUAGE DoRec                      #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE FunctionalDependencies     #-}
-
-#ifdef USE_UNDECIDABLE_INSTANCES
-{-# LANGUAGE FlexibleContexts           #-}
-{-# LANGUAGE UndecidableInstances       #-}
-{-# LANGUAGE OverlappingInstances       #-}
-#endif
+{-# OPTIONS_GHC -Wall #-}
 
 -- | This module re-exports both 'MonadTardis' and 'TardisT'
--- (Wherever there is overlap, the 'MonadTardis' version is preferred.),
--- as well as the 'TardisT' instance of 'MonadTardis'.
--- If you installed this library with the use-undecidable-instances flag,
--- then another instance was also exported:
--- any 'MonadTrans' on top of any 'MonadTardis'
--- is also a 'MonadTardis'.
+-- (Wherever there is overlap, the 'MonadTardis' version is preferred.)
 -- 
 -- The recommended usage of a Tardis is to import this module.
 module Control.Monad.Tardis
@@ -34,15 +17,6 @@ module Control.Monad.Tardis
   ) where
 
 
-#ifdef USE_UNDECIDABLE_INSTANCES
-import Control.Applicative (Applicative)
-import Control.Monad.Trans (MonadTrans, lift)
-#endif
-
-import Control.Monad.Fix
-import Control.Monad.State.Class
-
-import qualified Control.Monad.Trans.Tardis as T
 import Control.Monad.Tardis.Class
 import Control.Monad.Trans.Tardis
   ( TardisT
@@ -58,30 +32,6 @@ import Control.Monad.Trans.Tardis
   , noState
   )
 
-instance MonadFix m => MonadTardis bw fw (TardisT bw fw m) where
-  getPast    = T.getPast
-  getFuture  = T.getFuture
-  sendPast   = T.sendPast
-  sendFuture = T.sendFuture
-  tardis     = T.tardis
-
-instance MonadFix m => MonadState fw (TardisT bw fw m) where
-  get = getPast
-  put = sendFuture
-
-
-#ifdef USE_UNDECIDABLE_INSTANCES
-instance ( MonadTrans t
-         , MonadTardis bw fw m
-         , MonadFix (t m)
-         , Applicative (t m)
-         ) => MonadTardis bw fw (t m) where
-  getPast    = lift getPast
-  getFuture  = lift getFuture
-  sendPast   = lift . sendPast
-  sendFuture = lift . sendFuture
-  tardis     = lift . tardis
-#endif
 
 {- $whatis
     A Tardis is the combination of the State monad transformer

@@ -1,7 +1,9 @@
-{-# OPTIONS_GHC -Wall               #-}
-{-# LANGUAGE DoRec                  #-}
+{-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations   #-}
+{-# LANGUAGE DoRec                           #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances      #-}
+
 
 -- | The class definition of a Tardis,
 -- as well as a few straightforward combinators
@@ -21,6 +23,8 @@ module Control.Monad.Tardis.Class
 
 import Control.Applicative
 import Control.Monad.Fix
+
+import qualified Control.Monad.Trans.Tardis as T
 
 -- | A Tardis is parameterized by two state streams:
 -- a 'backwards-traveling' state and a 'forwards-traveling' state.
@@ -95,3 +99,10 @@ getsPast f = f <$> getPast
 getsFuture :: MonadTardis bw fw m => (bw -> a) -> m a
 getsFuture f = f <$> getFuture
 
+
+instance MonadFix m => MonadTardis bw fw (T.TardisT bw fw m) where
+  getPast    = T.getPast
+  getFuture  = T.getFuture
+  sendPast   = T.sendPast
+  sendFuture = T.sendFuture
+  tardis     = T.tardis
