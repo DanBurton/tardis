@@ -1,5 +1,5 @@
 name:                tardis
-version:             0.4.0.0
+version:             0.4.1.0
 synopsis:            Bidirectional state monad transformer
 homepage:            https://github.com/DanBurton/tardis
 bug-reports:         https://github.com/DanBurton/tardis/issues
@@ -37,4 +37,4 @@ source-repository head
 source-repository this
   type:     git
   location: git://github.com/DanBurton/tardis.git
-  tag:      tardis-0.4.0.0
+  tag:      tardis-0.4.1.0
