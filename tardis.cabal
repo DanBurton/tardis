@@ -27,6 +27,7 @@ library
 
   build-depends:       base==4.*
                      , mtl==2.*
+                     , mmorph==1.*
 
 
 source-repository head

@@ -10,8 +10,7 @@
 -- of what a Tardis is and how to use it.
 module Control.Monad.Trans.Tardis (
     -- * The Tardis monad transformer
-    TardisT
-  , runTardisT
+    TardisT (TardisT, runTardisT)
   , evalTardisT
   , execTardisT
 
@@ -37,12 +36,14 @@ module Control.Monad.Trans.Tardis (
   , getsFuture
 
     -- * Other
+  , mapTardisT
   , noState
   ) where
 
 import Control.Applicative
 import Control.Monad.Identity
 import Control.Monad.Trans
+import Control.Monad.Morph
 
 
 -- Definition
@@ -99,6 +100,12 @@ execTardis :: Tardis bw fw a -> (bw, fw) -> (bw, fw)
 execTardis t = runIdentity . execTardisT t
 
 
+-- | A function that operates on the internal representation of a Tardis
+-- can also be used on a Tardis.
+mapTardisT :: (m (a, (bw, fw)) -> n (b, (bw, fw)))
+           -> TardisT bw fw m a -> TardisT bw fw n b
+mapTardisT f m = TardisT $ f . runTardisT m
+
 -- | Some Tardises never observe the 'initial' state
 -- of either state stream, so it is convenient
 -- to simply hand dummy values to such Tardises.
@@ -136,6 +143,8 @@ instance MonadFix m => MonadFix (TardisT bw fw m) where
     rec (x, s') <- runTardisT (f x) s
     return (x, s')
 
+instance MFunctor (TardisT bw fw) where
+  hoist = mapTardisT
 
 -- Basics
 -------------------------------------------------
