@@ -25,7 +25,7 @@ library
                      , Control.Monad.Tardis.Class
                      , Control.Monad.Trans.Tardis
 
-  build-depends:       base==4.*
+  build-depends:       base >= 4.8 && < 5
                      , mtl==2.*
                      , mmorph==1.*
 
