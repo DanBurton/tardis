@@ -1,5 +1,5 @@
 name:                tardis
-version:             0.4.2.0
+version:             0.4.3.0
 synopsis:            Bidirectional state monad transformer
 homepage:            https://github.com/DanBurton/tardis
 bug-reports:         https://github.com/DanBurton/tardis/issues
