@@ -14,7 +14,7 @@ as well as receive information from both directions.
 It is isomorphic to a StateT on top of a ReverseStateT,
 or vice-versa.
 
-See Control/Monad/Tardis/Example.hs for an example.
+See test/Example.hs for an example.
 
 ----
 
