@@ -1,8 +1,6 @@
-{-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations #-}
-{-# LANGUAGE DoRec                           #-}
+{-# LANGUAGE RecursiveDo #-}
 
-
-module Control.Monad.Tardis.Example where
+module Example where
 
 import Control.Monad.Tardis
 
@@ -37,12 +35,14 @@ toScores :: BowlingGame -> [Int]
 toScores game = flip evalTardis initState $ go (frames game) where
   go :: [Frame] -> Tardis NextThrows PreviousScores [Int]
   go [] = do
-    PreviousScores scores@(score : _) <- getPast
+    PreviousScores scores <- getPast
+    let score = head scores
     return $ (finalFrameScore + score) : scores
   go (f : fs) = do
     rec
       sendPast $ NextThrows throws'
-      PreviousScores scores@(score : _) <- getPast
+      PreviousScores scores <- getPast
+      let score = head scores
       sendFuture $ PreviousScores (score' : scores)
       NextThrows ~(nextThrow1, nextThrow2) <- getFuture
       let (score', throws') = case f of
@@ -62,4 +62,8 @@ toScores game = flip evalTardis initState $ go (frames game) where
     LFrame  n  m -> (n,  m)
     , PreviousScores [0])
 
+expectedScores :: [Int]
+expectedScores = [236,206,176,146,126,117,98,70,40,20,0]
 
+actualScores :: [Int]
+actualScores = toScores sampleGame

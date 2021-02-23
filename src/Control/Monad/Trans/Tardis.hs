@@ -1,11 +1,9 @@
-{-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations #-}
 {-# LANGUAGE RecursiveDo                     #-}
-
 
 -- | The data definition of a "TardisT"
 -- as well as its primitive operations,
 -- and straightforward combinators based on the primitives.
--- 
+--
 -- See Control.Monad.Tardis for the general explanation
 -- of what a Tardis is and how to use it.
 module Control.Monad.Trans.Tardis (
@@ -209,4 +207,3 @@ getsPast f = fmap f getPast
 -- | Retrieve a specific view of the backwards-traveling state.
 getsFuture :: MonadFix m => (bw -> a) -> TardisT bw fw m a
 getsFuture f = fmap f getFuture
-

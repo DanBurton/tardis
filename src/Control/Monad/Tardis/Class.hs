@@ -1,14 +1,12 @@
-{-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations   #-}
-{-# LANGUAGE RecursiveDo                     #-}
+{-# LANGUAGE RecursiveDo            #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE FlexibleInstances      #-}
 
-
 -- | The class definition of a Tardis,
 -- as well as a few straightforward combinators
 -- based on its primitives.
--- 
+--
 -- See Control.Monad.Tardis for the general explanation
 -- of what a Tardis is and how to use it.
 module Control.Monad.Tardis.Class
