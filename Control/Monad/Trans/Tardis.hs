@@ -144,7 +144,7 @@ instance MonadFix m => MonadFix (TardisT bw fw m) where
     return (x, s')
 
 instance MFunctor (TardisT bw fw) where
-  hoist = mapTardisT
+  hoist f = mapTardisT f
 
 -- Basics
 -------------------------------------------------
