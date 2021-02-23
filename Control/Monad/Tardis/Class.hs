@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -Wall -fno-warn-warnings-deprecations   #-}
-{-# LANGUAGE DoRec                           #-}
+{-# LANGUAGE RecursiveDo                     #-}
 {-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE FlexibleInstances      #-}
