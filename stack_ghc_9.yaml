@@ -1,3 +1,0 @@
-resolver: lts-17.4
-compiler: ghc-9.0.1
-extra-deps: []
