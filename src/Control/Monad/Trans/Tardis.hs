@@ -1,4 +1,5 @@
 {-# LANGUAGE RecursiveDo                     #-}
+{-# LANGUAGE QuantifiedConstraints           #-}
 
 -- | The data definition of a "TardisT"
 -- as well as its primitive operations,
@@ -133,7 +134,7 @@ instance MonadFix m => Applicative (TardisT bw fw m) where
   (<*>) = ap
 
 
-instance MonadTrans (TardisT bw fw) where
+instance (forall m. MonadFix m) => MonadTrans (TardisT bw fw) where
   lift m = TardisT $ \s -> do
     x <- m
     return (x, s)
