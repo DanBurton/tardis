@@ -1,4 +1,7 @@
 {-# LANGUAGE RecursiveDo                     #-}
+{-# LANGUAGE RankNTypes                      #-}
+{-# LANGUAGE QuantifiedConstraints           #-}
+{-# LANGUAGE UndecidableInstances           #-}
 
 -- | The data definition of a "TardisT"
 -- as well as its primitive operations,
@@ -54,7 +57,7 @@ import Control.Monad.Morph
 -- This library consistently puts the backwards-traveling state first
 -- whenever the two are seen together.
 newtype TardisT bw fw m a = TardisT
-  { runTardisT :: (bw, fw) -> m (a, (bw, fw))
+  { runTardisT :: MonadFix m => (bw, fw) -> m (a, (bw, fw))
     -- ^ A TardisT is merely an effectful state transformation
   }
 
@@ -77,7 +80,7 @@ runTardis m = runIdentity . runTardisT m
 
 -- | Run a Tardis, and discard the final state,
 -- observing only the resultant value.
-evalTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m a
+evalTardisT :: MonadFix m => TardisT bw fw m a -> (bw, fw) -> m a
 evalTardisT t s = fst `liftM` runTardisT t s
 
 -- | Run a Tardis, and discard the resultant value,
@@ -85,7 +88,7 @@ evalTardisT t s = fst `liftM` runTardisT t s
 -- Note that the 'final' state of the backwards-traveling state
 -- is the state it reaches by traveling from the 'bottom'
 -- of your code to the 'top'.
-execTardisT :: Monad m => TardisT bw fw m a -> (bw, fw) -> m (bw, fw)
+execTardisT :: MonadFix m => TardisT bw fw m a -> (bw, fw) -> m (bw, fw)
 execTardisT t s = snd `liftM` runTardisT t s
 
 
@@ -102,7 +105,7 @@ execTardis t = runIdentity . execTardisT t
 
 -- | A function that operates on the internal representation of a Tardis
 -- can also be used on a Tardis.
-mapTardisT :: (m (a, (bw, fw)) -> n (b, (bw, fw)))
+mapTardisT :: MonadFix m => (m (a, (bw, fw)) -> n (b, (bw, fw)))
            -> TardisT bw fw m a -> TardisT bw fw n b
 mapTardisT f m = TardisT $ f . runTardisT m
 
@@ -118,20 +121,19 @@ noState = (undefined, undefined)
 -- Instances
 -------------------------------------------------
 
-instance MonadFix m => Monad (TardisT bw fw m) where
-  return x = tardis $ \s -> (x, s)
+instance Monad (TardisT bw fw m) where
+  return x = TardisT $ \s -> pure (x, s)
   m >>= f  = TardisT $ \ ~(bw, fw) -> do
     rec (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
         (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
     return (x', (bw'', fw''))
 
-instance MonadFix m => Functor (TardisT bw fw m) where
+instance Functor (TardisT bw fw m) where
   fmap = liftM
 
-instance MonadFix m => Applicative (TardisT bw fw m) where
+instance Applicative (TardisT bw fw m) where
   pure = return
   (<*>) = ap
-
 
 instance MonadTrans (TardisT bw fw) where
   lift m = TardisT $ \s -> do
@@ -143,7 +145,7 @@ instance MonadFix m => MonadFix (TardisT bw fw m) where
     rec (x, s') <- runTardisT (f x) s
     return (x, s')
 
-instance MFunctor (TardisT bw fw) where
+instance (forall m a. Monad m => MonadFix m) => MFunctor (TardisT bw fw) where
   hoist f = mapTardisT f
 
 -- Basics
