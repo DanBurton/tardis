@@ -1,0 +1,47 @@
+name: Haskell tests
+
+on: [push, pull_request]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        env:
+            STACK_ARGS: --no-terminal --system-ghc --resolver=${{ matrix.snapshot }}
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                - snapshot: nightly-2024-01-15
+                  ghc: 9.8.1
+                - snapshot: lts-22.6
+                  ghc: 9.6.3
+                - snapshot: lts-21.25
+                  ghc: 9.4.8
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Setup Haskell Stack
+          uses: haskell-actions/setup@v2
+          with:
+              ghc-version: ${{ matrix.ghc }}
+              enable-stack: true
+              stack-version: 'latest'
+
+        - name: Cache dependencies
+          id: cache-stack
+          uses: actions/cache@v3
+          with:
+              path: ~/.stack
+              key: ${{ runner.os }}-stack-${{ matrix.snapshot }}-${{ hashFiles('**/stack.yaml') }}
+              restore-keys: |
+                  ${{ runner.os }}-stack-${{ matrix.snapshot }}-
+
+        - name: Dependencies
+          run: stack ${{ env.STACK_ARGS }} test --dependencies-only
+
+        - name: Build and Test
+          run: |
+            stack ${{ env.STACK_ARGS }} exec -- ghc --version
+            stack ${{ env.STACK_ARGS }} test
