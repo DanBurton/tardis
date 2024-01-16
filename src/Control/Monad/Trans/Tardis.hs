@@ -1,4 +1,5 @@
 {-# LANGUAGE RecursiveDo                     #-}
+{-# LANGUAGE TupleSections #-}
 
 -- | The data definition of a "TardisT"
 -- as well as its primitive operations,
@@ -35,6 +36,7 @@ module Control.Monad.Trans.Tardis (
 
     -- * Other
   , mapTardisT
+  , liftTardisT
   , noState
   ) where
 
@@ -99,6 +101,10 @@ evalTardis t = runIdentity . evalTardisT t
 execTardis :: Tardis bw fw a -> (bw, fw) -> (bw, fw)
 execTardis t = runIdentity . execTardisT t
 
+-- | An action in the underlying monad (or just functor, really)
+-- can also be used in a Tardis by lifting it in.
+liftTardisT :: (Functor m) => m a -> TardisT bw fw m a
+liftTardisT m = TardisT $ \s -> fmap (,s) m
 
 -- | A function that operates on the internal representation of a Tardis
 -- can also be used on a Tardis.
@@ -131,12 +137,6 @@ instance MonadFix m => Functor (TardisT bw fw m) where
 instance MonadFix m => Applicative (TardisT bw fw m) where
   pure = return
   (<*>) = ap
-
-
-instance MonadTrans (TardisT bw fw) where
-  lift m = TardisT $ \s -> do
-    x <- m
-    return (x, s)
 
 instance MonadFix m => MonadFix (TardisT bw fw m) where
   mfix f = TardisT $ \s -> do
