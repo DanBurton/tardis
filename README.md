@@ -1,5 +1,7 @@
 # TardisT
 
+![build status](https://github.com/DanBurton/tardis/actions/workflows/haskell.yml/badge.svg?branch=master)
+
 The State monad allows you
 to send information forwards to the future,
 or to receive such information from the past.
