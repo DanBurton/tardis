@@ -1,4 +1,0 @@
-resolver: lts-19.6
-extra-deps:
-- mtl-2.3
-- mmorph-1.2.0 # snapshot mmorph requires old mtl
