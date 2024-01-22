@@ -122,7 +122,6 @@ noState = (undefined, undefined)
 -------------------------------------------------
 
 instance Monad (TardisT bw fw m) where
-  return x = TardisT $ \s -> pure (x, s)
   m >>= f  = TardisT $ \ ~(bw, fw) -> do
     rec (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
         (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
@@ -132,7 +131,7 @@ instance Functor (TardisT bw fw m) where
   fmap = liftM
 
 instance Applicative (TardisT bw fw m) where
-  pure = return
+  pure x = TardisT $ \s -> pure (x, s)
   (<*>) = ap
 
 instance MonadTrans (TardisT bw fw) where
