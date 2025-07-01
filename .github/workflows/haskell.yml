@@ -7,14 +7,18 @@ jobs:
         runs-on: ubuntu-latest
 
         env:
-            STACK_ARGS: --no-terminal --system-ghc --resolver=${{ matrix.snapshot }}
+            STACK_ARGS: --no-terminal --system-ghc --resolver=${{ matrix.snapshot }} --compiler=ghc-${{ matrix.ghc }} --no-install-ghc
 
         strategy:
             fail-fast: false
             matrix:
                 include:
-                - snapshot: nightly-2024-01-15
-                  ghc: 9.8.1
+                - snapshot: nightly-2025-07-01
+                  ghc: 9.12.2
+                - snapshot: nightly-2025-07-01
+                  ghc: 9.10.2
+                - snapshot: lts-23.26
+                  ghc: 9.8.4
                 - snapshot: lts-22.6
                   ghc: 9.6.3
                 - snapshot: lts-21.25
