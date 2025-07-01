@@ -38,9 +38,9 @@ jobs:
           uses: actions/cache@v3
           with:
               path: ~/.stack
-              key: ${{ runner.os }}-stack-${{ matrix.snapshot }}-${{ hashFiles('**/stack.yaml') }}
+              key: ${{ runner.os }}-stack-${{ matrix.snapshot }}-${{ matrix.ghc }}-${{ hashFiles('**/stack.yaml') }}
               restore-keys: |
-                  ${{ runner.os }}-stack-${{ matrix.snapshot }}-
+                  ${{ runner.os }}-stack-${{ matrix.snapshot }}-${{ matrix.ghc }}-
 
         - name: Dependencies
           run: stack ${{ env.STACK_ARGS }} test --dependencies-only
