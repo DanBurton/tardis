@@ -126,9 +126,9 @@ noState = (undefined, undefined)
 
 instance MonadFix m => Monad (TardisT bw fw m) where
   return x = tardis $ \s -> (x, s)
-  m >>= f  = TardisT $ \ ~(bw, fw) -> do
-    rec (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
-        (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
+  m >>= f  = TardisT $ \ ~(bw, fw) -> mdo
+    (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
+    (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
     return (x', (bw'', fw''))
 
 instance MonadFix m => Functor (TardisT bw fw m) where
@@ -139,8 +139,8 @@ instance MonadFix m => Applicative (TardisT bw fw m) where
   (<*>) = ap
 
 instance MonadFix m => MonadFix (TardisT bw fw m) where
-  mfix f = TardisT $ \s -> do
-    rec (x, s') <- runTardisT (f x) s
+  mfix f = TardisT $ \s -> mdo
+    (x, s') <- runTardisT (f x) s
     return (x, s')
 
 instance MFunctor (TardisT bw fw) where
@@ -194,10 +194,9 @@ modifyForwards f = getPast >>= sendFuture . f
 -- | Modify the backwards-traveling state
 -- as it passes through from future to past.
 modifyBackwards :: MonadFix m => (bw -> bw) -> TardisT bw fw m ()
-modifyBackwards f = do
-  rec
-    sendPast (f x)
-    x <- getFuture
+modifyBackwards f = mdo
+  sendPast (f x)
+  x <- getFuture
   return ()
 
 

@@ -38,17 +38,16 @@ toScores game = flip evalTardis initState $ go (frames game) where
     PreviousScores scores <- getPast
     let score = head scores
     return $ (finalFrameScore + score) : scores
-  go (f : fs) = do
-    rec
-      sendPast $ NextThrows throws'
-      PreviousScores scores <- getPast
-      let score = head scores
-      sendFuture $ PreviousScores (score' : scores)
-      NextThrows ~(nextThrow1, nextThrow2) <- getFuture
-      let (score', throws') = case f of
-            Strike    -> (score + 10 + nextThrow1 + nextThrow2, (10, nextThrow1))
-            Spare n   -> (score + 10 + nextThrow1,              (n, 10 - n))
-            Frame n m -> (score + n + m,                        (n, m))
+  go (f : fs) = mdo
+    sendPast $ NextThrows throws'
+    PreviousScores scores <- getPast
+    let score = head scores
+    sendFuture $ PreviousScores (score' : scores)
+    NextThrows ~(nextThrow1, nextThrow2) <- getFuture
+    let (score', throws') = case f of
+          Strike    -> (score + 10 + nextThrow1 + nextThrow2, (10, nextThrow1))
+          Spare n   -> (score + 10 + nextThrow1,              (n, 10 - n))
+          Frame n m -> (score + n + m,                        (n, m))
     go fs
 
   finalFrameScore = case lastFrame game of

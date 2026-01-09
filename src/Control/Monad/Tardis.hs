@@ -61,14 +61,14 @@ import Control.Monad.Trans.Tardis
     while setting the backwards-traveling state will affect the /past/.
     Take a look at how Monadic bind is implemented for 'TardisT':
 
-> m >>= f  = TardisT $ \ ~(bw, fw) -> do
->   rec (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
->       (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
+> m >>= f  = TardisT $ \ ~(bw, fw) -> mdo
+>   (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
+>   (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
 >   return (x', (bw'', fw''))
 
     Like the Reverse State monad transformer, TardisT's Monad instance
     requires that the monad it transforms is an instance of MonadFix,
-    as is evidenced by the use of @rec@.
+    as is evidenced by the use of @mdo@.
     Notice how the forwards-traveling state travels /normally/:
     first it is fed to @m@, producing @fw'@, and then it is fed to @f x@,
     producing @fw''@. The backwards-traveling state travels in the opposite
