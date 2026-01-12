@@ -21,7 +21,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/augustss/MicroHs.git mhs
           cd mhs
-          git fetch --depth 1 "${MHS_VERSION}"
+          git fetch --depth 1 origin "${MHS_VERSION}"
           git checkout "${MHS_VERSION}"
           make minstall
       - name: Add bins to PATH
