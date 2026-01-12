@@ -51,4 +51,4 @@ source-repository head
 source-repository this
   type:     git
   location: https://github.com/DanBurton/tardis.git
-  tag:      tardis-0.4.1.0
+  tag:      tardis-0.5.0.1
