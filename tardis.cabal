@@ -46,9 +46,9 @@ test-suite tardis-tests
 
 source-repository head
   type:     git
-  location: git://github.com/DanBurton/tardis.git
+  location: https://github.com/DanBurton/tardis.git
 
 source-repository this
   type:     git
-  location: git://github.com/DanBurton/tardis.git
+  location: https://github.com/DanBurton/tardis.git
   tag:      tardis-0.4.1.0
