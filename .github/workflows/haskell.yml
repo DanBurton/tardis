@@ -13,14 +13,14 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                - snapshot: nightly-2025-07-01
-                  ghc: 9.12.2
-                - snapshot: nightly-2025-07-01
-                  ghc: 9.10.2
-                - snapshot: lts-23.26
+                - snapshot: nightly-2026-01-11
+                  ghc: 9.12.3
+                - snapshot: lts-24.27
+                  ghc: 9.10.3
+                - snapshot: lts-23.28
                   ghc: 9.8.4
-                - snapshot: lts-22.6
-                  ghc: 9.6.3
+                - snapshot: lts-22.44
+                  ghc: 9.6.7
                 - snapshot: lts-21.25
                   ghc: 9.4.8
         steps:
