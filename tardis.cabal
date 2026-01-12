@@ -42,7 +42,7 @@ test-suite tardis-tests
   build-depends:     base >= 4.8 && < 5
                    , tardis
   other-modules:   Example
-  ghc-options: -Wcompat -Wall -Wno-x-partial
+  ghc-options: -Wcompat -Wall -Wno-unrecognised-warning-flags -Wno-x-partial
 
 source-repository head
   type:     git
