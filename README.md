@@ -31,4 +31,4 @@ http://panicsonic.blogspot.com/2007/12/backwards-state-or-power-of-laziness.html
 
 ----
 
-(c) 2012 Dan Burton
+(c) 2012-2026 Dan Burton
