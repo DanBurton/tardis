@@ -2,3 +2,4 @@
 /dist-newstyle
 .stack-work
 dist-mcabal
+.vscode
