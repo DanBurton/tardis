@@ -7,4 +7,6 @@ main = case actualScores == expectedScores of
     putStrLn $ "Expected: " <> show expectedScores
     putStrLn $ "Actual: " <> show actualScores
     exitFailure
-  True -> exitSuccess
+  True -> do
+    putStrLn "Test passed."
+    exitSuccess
