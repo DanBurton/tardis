@@ -10,14 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Cache mhs build tools
-        id: cache-mhs
-        uses: actions/cache@v4
-        with:
-          path: ~/.mcabal/bin
-          key: ${{ runner.os }}-mhs-$MHS_VERSION
       - name: Install mhs build tools
-        if: steps.cache-mhs.outputs.cache-hit != 'true'
         run: |
           git clone --depth 1 https://github.com/augustss/MicroHs.git mhs
           cd mhs
