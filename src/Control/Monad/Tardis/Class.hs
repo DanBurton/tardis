@@ -66,13 +66,12 @@ class (Applicative m, MonadFix m) => MonadTardis bw fw m | m -> bw, m -> fw wher
 
   -- | A Tardis is merely a pure state transformation.
   tardis :: ((bw, fw) -> (a, (bw, fw))) -> m a
-  tardis f = do
-    rec
-      let (a, (future', past')) = f (future, past)
-      sendPast future'
-      past <- getPast
-      future <- getFuture
-      sendFuture past'
+  tardis f = mdo
+    let (a, (future', past')) = f (future, past)
+    sendPast future'
+    past <- getPast
+    future <- getFuture
+    sendFuture past'
     return a
 
 -- | Modify the forwards-traveling state
@@ -83,10 +82,9 @@ modifyForwards f = getPast >>= sendFuture . f
 -- | Modify the backwards-traveling state
 -- as it passes through from future to past.
 modifyBackwards :: MonadTardis bw fw m => (bw -> bw) -> m ()
-modifyBackwards f = do
-  rec
-    sendPast (f x)
-    x <- getFuture
+modifyBackwards f = mdo
+  sendPast (f x)
+  x <- getFuture
   return ()
 
 -- | Retrieve a specific view of the forwards-traveling state.
