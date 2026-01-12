@@ -2,20 +2,25 @@ name: Haskell tests (mhs)
 
 on: [push, pull_request]
 
-env:
-  MHS_VERSION: da363c44cd5d584f5938cae9a1b5ad81fc8fcdff
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: v0.15.2.0-da363c4
+            mhs: da363c44cd5d584f5938cae9a1b5ad81fc8fcdff
+          - name: latest
+            mhs: master
     steps:
       - uses: actions/checkout@v4
       - name: Install mhs build tools
         run: |
           git clone --depth 1 https://github.com/augustss/MicroHs.git mhs
           cd mhs
-          git fetch --depth 1 origin "${MHS_VERSION}"
-          git checkout "${MHS_VERSION}"
+          git fetch --depth 1 origin "${{ matrix.mhs }}"
+          git checkout "${{ matrix.mhs }}"
           make minstall
       - name: Add bins to PATH
         run: echo "$HOME/.mcabal/bin" >> "$GITHUB_PATH"
