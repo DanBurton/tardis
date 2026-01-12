@@ -125,7 +125,6 @@ noState = (undefined, undefined)
 -------------------------------------------------
 
 instance MonadFix m => Monad (TardisT bw fw m) where
-  return x = tardis $ \s -> (x, s)
   m >>= f  = TardisT $ \ ~(bw, fw) -> mdo
     (x,  ~(bw'', fw' )) <- runTardisT m (bw', fw)
     (x', ~(bw' , fw'')) <- runTardisT (f x) (bw, fw')
@@ -135,7 +134,7 @@ instance MonadFix m => Functor (TardisT bw fw m) where
   fmap = liftM
 
 instance MonadFix m => Applicative (TardisT bw fw m) where
-  pure = return
+  pure x = tardis $ \s -> (x, s)
   (<*>) = ap
 
 instance MonadFix m => MonadFix (TardisT bw fw m) where
